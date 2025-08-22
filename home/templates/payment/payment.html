@@ -1,0 +1,10 @@
+<form method="post">
+    {% csrf_token %}
+    <label for="purchase_name"> purchase_name </label>
+    <input type="text" name="purchase_name" id="purchase_name"> <br> 
+    <label for="payment_amount"> AMOUNT  </label>
+    <input type="number" name="payment_amount" id="payment_amount" > <br> 
+
+
+    <button type="submit"> PAY </button>
+</form>
