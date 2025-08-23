@@ -1,90 +1,85 @@
-                                             PAYMENT INGERRATION WITH KHALTI
-
+# 💳 Payment Integration with Khalti (Django)
 
 ![Logo](https://khaltibyime.khalti.com/wp-content/uploads/2025/07/Logo-for-Blog.png)
 
+---
 
-## Acknowledgements
+## 📚 Table of Contents
 
- - [For Official Khalti Guide Click ME !](https://docs.khalti.com/)
+* [Acknowledgements](#-acknowledgements)
+* [Quick Start](#-quick-start)
+* [Installation](#-installation)
+* [Project Configuration](#-project-configuration)
+* [Custom User & Payment Models](#-custom-user--payment-models)
+* [Admin Configuration](#-admin-configuration)
+* [Templates](#-templates)
+* [Views & Routing](#-views--routing)
+* [Khalti Payment Integration](#-khalti-payment-integration)
 
+  * [Initiating a Payment](#initiating-a-payment)
+  * [Payment Verification](#payment-verification)
+* [Generic Errors](#-generic-errors)
+* [Example Project](#-example-project)
 
-## Quick Start ! 
+---
 
-Integrating Khalti with Django is pretty simple! . it might have some learning Curve for indivisual developers but trust the process ! .
+## 🙌 Acknowledgements
 
+* [Official Khalti Documentation](https://docs.khalti.com/)
 
+---
 
+## ⚡ Quick Start
 
+Integrating **Khalti with Django** is straightforward.
+It might feel like a learning curve at first, but trust the process!
 
-## Installation
+---
 
-## Initializing virtual env (Linux/Mac):
-Initializing virtual env (Linux/Mac):
+## ⚙️ Installation
+
+### Create Virtual Environment
+
+**Linux / Mac**
+
 ```bash
-  python3 -m venv .venv
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-Activating the env:
+**Windows**
 
 ```bash
-  source .venv/bin/activate
+python -m venv .venv
+source .venv/Scripts/activate
 ```
 
-## Initializing virtual env (Windows):
+### Install Django
+
 ```bash
-  python -m venv .venv
+pip install django
 ```
 
-Activating the env:
+### Check Version
 
 ```bash
-  source .venv/Scripts/activate
+django-admin --version
 ```
 
-
-Install Django with with pip:
+### Create Project & App
 
 ```bash
-  pip install django
+django-admin startproject {project_name} .
+django-admin startapp {app_name}
 ```
 
-## Check your Django Version:
+---
 
-```bash
-  django-admin --version
-```
+## 🔧 Project Configuration
 
+### Add App to `INSTALLED_APPS`
 
-## After that create your project
-
-```bash
-  django-admin startproject {project_name} .
-
-```
-
-Create your Django App:
-```bash
-  django-admin startapp {app_name}
-
-```
-
-## Configuring the Project 
-
-
-
-
-
-
-
-
-![Adding installed Apps](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/adding_app.png?raw=true)
-
-
-## Adding installed apps in INSTALLED_APPS
-
-Add your {app_name} , eg 'home' :
-```bash
+```python
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -92,470 +87,266 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'home',
-    ]
+    'home',   # your app
+]
 ```
 
+### Add Routing in `{project_name}/urls.py`
 
-## Adding Routing 
-![Routing](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/routing_to_app.png?raw=true)
+```python
+from django.urls import path, include
 
-
-## In {porject_name}/urls.py 
-    
-    from django.urls import path,include
-
-## Add This in urlspatterns :
-
-
-    path('',include('{app_name}.urls'))
-
-## For more detailed information visit the official Django Docs !
-
- - [official Django Docs] [V-5.2](https://docs.djangoproject.com/en/5.2/)
-
-## Setting up the config for app:
-
-`Add urls.py in {app_name} folder structure `
-
-## In {app_name}/urls.py:
-
-`lets create a url that will route to a home page contaning user id `
-
-`lets start by creating views and templates`
-
-## Creating templates
-
-`Create a templates folder in {app_name}  `
-
-
-Your folder structure should look like this!
-
-``` bash
-    {app_name}/templates
-
+urlpatterns = [
+    path('', include('{app_name}.urls')),
+]
 ```
 
-Now lets add some Html files.
+📖 [Django Docs (v5.2)](https://docs.djangoproject.com/en/5.2/)
 
-let`s add home and payment folder in which they will contain their own respective html files
+---
 
-Your folder structure should look like this :
+## 👤 Custom User & Payment Models
 
-        {app_name}/templates/home/home.html
+### Enable Custom User in `settings.py`
 
-
-and
-        {app_name}/templates/payment/payment.html
-
-- [code for home.html](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/home/templates/home/home.html)
-
-- [code for payment.html](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/home/templates/payment/payment.html)
-
-## Payment.html
-
-![payment.html](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/simple_payment_frontend.png?raw=true)
-
-
-## Variables Name
-
-
-`name` - > (for sendind data in backend ! {app_name/views.py} )
-
-`id` - > (for label) 
-
-## Lets create Data Base to store User payment 
-
-we will be usin Custom User model via AbstractUser and using uuid to generate unique id :
-
-# Adding Custom_user Auth_model :
-`In {project_name}/settings.py` 
-
-![adding_user_model](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/custom_user_model.png?raw=true)
-
-```bash
-    AUTH_USER_MODEL = "home.Custom_user"
+```python
+AUTH_USER_MODEL = "home.Custom_user"
 ```
 
-# `importing necessary packages `
+### Define Models (`{app_name}/models.py`)
 
-`In {app_name}/models.py`
-
-![user_model](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/import_model_py.png?raw=true)
-
-
-```bash
+```python
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
 
-```
-
-
-
-![user_model](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/adding_custom_fields.png?raw=true)
-
-
-```bash
 class Custom_user(AbstractUser):
-    id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
-    age = models.IntegerField(null=True,blank=True)
-    contact = models.IntegerField(null=True,blank=True)
-```
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    age = models.IntegerField(null=True, blank=True)
+    contact = models.IntegerField(null=True, blank=True)
 
 
-![user_model](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/models_payment.png?raw=true)
-
-``` bash
 class Payment(models.Model):
-    
-    # saving purchase details from our side ! 
-    
     class Status(models.TextChoices):
-        SUCESS = "SUCESS","Sucess"
-        PENDING = "PENDNG","Pending"
-        FAILURE = "FAILURE","Failure"
+        SUCCESS = "SUCCESS", "Success"
+        PENDING = "PENDING", "Pending"
+        FAILURE = "FAILURE", "Failure"
         INITIATED = "INITIATED", "Initiated"
-        REFUNDED =  "REFUNDED",'Refunded'
-                
-    user = models.ForeignKey(Custom_user,on_delete=models.CASCADE)
-    purchase_id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
-    purchase_order_name = models.CharField(verbose_name='purchase_order_name')
-    purchse_status = models.CharField(choices=Status.choices,default=Status.INITIATED)
+        REFUNDED = "REFUNDED", "Refunded"
+
+    user = models.ForeignKey(Custom_user, on_delete=models.CASCADE)
+    purchase_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    purchase_order_name = models.CharField(max_length=255)
+    purchase_status = models.CharField(choices=Status.choices, default=Status.INITIATED)
     purchase_amount = models.FloatField(null=True)
     initiated_at = models.DateTimeField(auto_now_add=True)
 
-    # saving purchase Details from Khalti Side ! 
-
-    pidx = models.CharField(verbose_name='pidx',editable=False)
-    khalti_status = models.CharField(verbose_name='Status From Khalti ',editable=False)
-    khalti_transaction_id = models.CharField(verbose_name='Khati Transation ID' ,  editable=False)
-    updated_at  = models.DateTimeField(auto_now=True)
+    # Khalti details
+    pidx = models.CharField(max_length=255, editable=False)
+    khalti_status = models.CharField(max_length=100, editable=False)
+    khalti_transaction_id = models.CharField(max_length=255, editable=False)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Transaction of user {self.user.username} = > Status : {self.purchse_status}"
-
+        return f"Transaction by {self.user.username} => {self.purchase_status}"
 ```
 
-
-## Now make migrations
-
-- `python manage.py makemigrations`
-- `python manage.py migrate`
-
-## Add it in admin.py
-![admin](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/admin_page.png?raw=true)
-
-
+### Run Migrations
 
 ```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+---
+
+## 🛠️ Admin Configuration
+
+```python
 from django.contrib import admin
-from .models import Custom_user,Payment
+from .models import Custom_user, Payment
 
 admin.site.register(Custom_user)
-class PAYMENT_ADMIN(admin.ModelAdmin):
-    list_display=[
+
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = [
         'user',
         'purchase_id',
-        'purchse_status',
+        'purchase_status',
         'purchase_amount',
         'khalti_status',
         'pidx',
         'khalti_transaction_id',
         'initiated_at',
-        'updated_at'
+        'updated_at',
     ]
-admin.site.register(Payment,PAYMENT_ADMIN)
+
+admin.site.register(Payment, PaymentAdmin)
 ```
 
-## Rememer how we had created templates ? . Now lets add url routing and render it ! 
+---
 
-`In {app_name}/views.py  lets render home page first and then the payment page ! `
+## 🗼️ Templates
 
-![home](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/basic_home_page_with_user_id.png?raw=true)
+Folder structure:
 
-`Passing user id as Context to show it in Home page `
+```
+{app_name}/templates/home/home.html
+{app_name}/templates/payment/payment.html
+```
 
-```bash
-from django.http import HttpResponse
+* [home.html Example](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/home/templates/home/home.html)
+* [payment.html Example](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/home/templates/payment/payment.html)
+
+---
+
+## 🌐 Views & Routing
+
+### Views (`{app_name}/views.py`)
+
+```python
 from django.shortcuts import render
 
 def home(request):
     context = {
-        'id':request.user.id
+        'id': request.user.id
     }
-    return render(request,'home/home.html',context)
-
+    return render(request, 'home/home.html', context)
 ```
 
+### Routes (`{app_name}/urls.py`)
 
-# Adding routing to that view
-
-![url](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/routing_to_views.png?raw=true)
-```bash
-
+```python
 from django.urls import path
 from . import views
 
 app_name = "home"
+
 urlpatterns = [
-    path('',views.home,name='home'),
-    path("payment/",views.payment_gate, name="payment_gate"),
-    path('payment/validation/',views.payment_validation,name="payment_validation"),
+    path('', views.home, name='home'),
+    path("payment/", views.payment_gate, name="payment_gate"),
+    path('payment/validation/', views.payment_validation, name="payment_validation"),
 ]
-
-
-
-```
-# Note Do not add the routing for payment related views it has not been implemented yet ! 
-
-` The Easy part Ends now ! lets integrate Khalti payment `
-
-# Creating Khalti Dev/test account 
-
- - [Create Khalti Test Account ](https://test-admin.khalti.com/#/join/merchant)
-
-- [Official Khalti Doc (Khalti-epayment)](https://docs.khalti.com/khalti-epayment/)
-
-
-## Initiating a Payment request
-
-#### Every payment request should be first initiated from the merchant as a server side POST request. Upon success, a unique request identifier is provided called pidx that should be used for any future references
-```http
-  POST /epayment/initiate/
-```
-| URL                  | Method | Format                       | Authorization |
-| :------------------- | :----- | :--------------------------- | :------------ |
-| `/epayment/initiate/` | POST   | **Required**. application/json | **Required**  |
-
-### 
-
-# Json Payload
-
-| Field               | Required | Description                                                                 |
-| :------------------ | :------- | :-------------------------------------------------------------------------- |
-| `return_url`        | Yes      | Landing page after the transaction. ` Must contain a valid URL.`          |
-| `website_url`       | Yes      | The URL of the website. ` Must contain a valid URL.`                      |
-| `amount`            | Yes      | Total payable amount excluding the service charge. `Amount must be in Paisa.` |
-| `purchase_order_id` | Yes      | Unique identifier for the transaction generated by merchant.                |
-| `purchase_order_name` | Yes    | The name of the product.                                                    |
-
-### Example
-
-
-```bash
-import requests
-import json
-
-url = "https://dev.khalti.com/api/v2/epayment/initiate/"
-
-payload = json.dumps({
-    "return_url": "http://example.com/",
-    "website_url": "https://example.com/",
-    "amount": "1000",
-    "purchase_order_id": "1231231231kjhgjkgh",
-    "purchase_order_name": "test101",
-    "customer_info": {
-    "name": "bla bla ",
-    "email": "example@gmail.com",
-    "phone": "9800000000"
-    }
-})
-headers = {
-    'Authorization': 'key live_secret_key_68791341fdd94846a146f0457ff7b455',
-    'Content-Type': 'application/json',
-}
-
-response = requests.request("POST", url, headers=headers, data=payload)
-
-print(response.text)
-```
-## You might say what is the use of return_url and website_url 
-
-`return_url`  - > It is given to redirect user to your own website after payment is done 
-
-`website_url` - > your current page url 
-
-we will explore it further ! 
-
-## Lets implement it in Django ! 
-
-Here is an example of how it might look 
-
-![bare_bone_example](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/barebone_payment_example.png?raw=true)
-
-
-### But before running it we need to get our Secret key aka Live Secret key 
-
-- [Get you Live Secret Key ](https://test-admin.khalti.com/#/settings/keys)
-
-`Once you have your key create a .env file and add it there ! . Remember do not share it in any other Platform keep it to your self ! `
-
-# Suggestion use python decouple:
-
-#### Installing it :
-
-``` bash
-    pip install python-decouple
 ```
 
-#### Import all your secret Keys in settings.py :
+---
 
-![importing_keys](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/importing_decouple.png?raw=true)
+## 💳 Khalti Payment Integration
 
-![use_case](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/importing_keys_from_.env.png?raw=true)
+### Initiating a Payment
 
-#### You might say what is KHALTI_URL , KHALTI_BASE_URL,KHALTI_PAYMENT_VERIFICATION_URL 
+* Endpoint: `POST /epayment/initiate/`
+* Docs: [Khalti e-Payment](https://docs.khalti.com/khalti-epayment/)
 
-`KHALTI_BASE_URL` - > https://dev.khalti.com/api/v2
+Django Example:
 
-`KHALTI_PAYMENT_VERIFICATION_URL ` - >  /epayment/lookup/
+```python
+import json, requests
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.urls import reverse
+from .models import Payment
 
-` KHALTI_URL` - > https://dev.khalti.com/api/v2/epayment/initiate/
-
-#### These are the api endpoint we will use to make payment request and to verify the payment 
-#
-### Lets make a view to add Payment GateWay !
-
-#### Importing necessary packages :
-
-![imports](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/importing.png?raw=true)
-
-#### Simple payment Logic :
-`Thigs To Consider :`
-
-- `remember that khalti acccepts amount as paisa not in  rupeese !`
-- `khalti takes order id as string`
-![logic](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/integrating_Khalti.png?raw=true)
-
-```bash
 def payment_gate(request):
-
     Debug = False
 
     if request.method == 'POST':
-        amount=request.POST.get('payment_amount')
-        purchse_name = request.POST.get('purchase_name')
+        amount = request.POST.get('payment_amount')
+        purchase_name = request.POST.get('purchase_name')
 
         url = settings.KHALTI_URL
-        AMOUNT = int(amount)*100
+        AMOUNT = int(amount) * 100  # Convert to paisa
 
-        payment_obj = Payment.objects.create(user=request.user,purchase_order_name=purchse_name,purchase_amount=amount)
-     
-        print("======================================ID========================================")
-        
+        payment_obj = Payment.objects.create(
+            user=request.user,
+            purchase_order_name=purchase_name,
+            purchase_amount=amount
+        )
+
         payload = json.dumps({
-        "return_url": request.build_absolute_uri(reverse("home:payment_validation")),
-        "website_url":request.build_absolute_uri('/'),
-        "amount": AMOUNT,
-        "purchase_order_id": str(payment_obj.purchase_id),
-        "purchase_order_name": payment_obj.purchase_order_name,
-        "customer_info": {
-        "name": payment_obj.user.username,
-        "email": payment_obj.user.email,
-        "phone": payment_obj.user.contact
-         }
+            "return_url": request.build_absolute_uri(reverse("home:payment_validation")),
+            "website_url": request.build_absolute_uri('/'),
+            "amount": AMOUNT,
+            "purchase_order_id": str(payment_obj.purchase_id),
+            "purchase_order_name": payment_obj.purchase_order_name,
+            "customer_info": {
+                "name": payment_obj.user.username,
+                "email": payment_obj.user.email,
+                "phone": payment_obj.user.contact,
+            }
         })
+
         headers = {
             'Authorization': f'key {settings.SECRET_KEY}',
             'Content-Type': 'application/json',
         }
 
-        response = requests.request("POST", url, headers=headers, data=payload)
-        print("=====================================================================")
-        print(response)
+        response = requests.post(url, headers=headers, data=payload)
 
-
-        
         if Debug:
             return JsonResponse(response.json(), safe=False)
         else:
             return redirect(response.json()['payment_url'])
-        
-    else:
-        return render(request,'payment/payment.html')
 
+    return render(request, 'payment/payment.html')
 ```
 
+---
 
-#### When user Pays via Khalti We need to verify it ! , here in the Given code sample a simple verification is implemented 
+### Payment Verification
 
-```http
-  POST /epayment/lookup/
-```
-| URL                  | Method | Format                       | Authorization |
-| :------------------- | :----- | :--------------------------- | :------------ |
-| `/epayment/lookup/` | POST   | **Required**. application/json | **Required**  |
+* Endpoint: `POST /epayment/lookup/`
 
-### 
+```python
+def payment_validation(request):
+    import json, requests
 
+    pidx = request.GET.get("pidx")
 
-![verification](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/khalti_payment_validation.png?raw=true)
+    url = f"{settings.KHALTI_BASE_URL}/epayment/lookup/"
+    payload = json.dumps({"pidx": pidx})
+    headers = {
+        "Authorization": f"key {settings.SECRET_KEY}",
+        "Content-Type": "application/json",
+    }
 
-### what does this code do  ? 
+    response = requests.post(url, headers=headers, data=payload)
+    data = response.json()
 
-- get the data 
-- printing the recived data 
-- url - > `https://dev.khalti.com/api/v2/epayment/lookup/`
-- paylad - > makes a json data to send to khalati server pidx { transaction id } for verification
-- Headers - > contain you khalti SECRET_KEY and Content_Type 
-- response - > sends a `POST` request to khalti server api endpoint `https://dev.khalti.com/api/v2/epayment/lookup/`
+    # Update Payment object in DB here
 
-- data  - > gets the response send by khalti server it contains  ` {pidx,total_amount,status,transaction_id,fee,refund} ` 
-
-Checks it the recived data is valid or not if it is valid then check its status and if the status is Completed mark it as Sucess and did u notice there is a comment in models,py :
-
-`    # saving purchase Details from Khalti Side ! `
-what it meant is we need to update our system by ourself to check if user has paid or not . we need to update the status to match with khalti status and save the pidx id and transaction_id , it is also mentioned in the official doc that `If any negative consequences occur due to incomplete API integration or providing service without checking lookup status, Khalti won’t be accountable for any such losses.` so we as a developer should be ahead and counter that possibility .
-
-#### If the payment was successful it should show 
-
-![sucess_image](https://github.com/Shishir-Kc/schoolpaymentsys/blob/main/ASSETS/sucess.png?raw=true)
-
-
-
-# Generic Errors
-
-#### When an incorrect Authorization key is passed.
-
-```
-{
-   "detail": "Invalid token.",
-   "status_code": 401
-}
-
+    return JsonResponse(data)
 ```
 
+---
 
-#### If incorrect pidx is passed.
+## ❌ Generic Errors
 
-```
-{
-   "detail": "Not found.",
-   "error_key": "validation_error"
-}
+**Invalid Token**
 
-```
-
-#### If key is not passed as prefix in Authorization key
-
-```
-{
-    "detail": "Authentication credentials were not provided.",
-    "status_code": 401
-}
-
+```json
+{ "detail": "Invalid token.", "status_code": 401 }
 ```
 
+**Incorrect pidx**
 
-##
+```json
+{ "detail": "Not found.", "error_key": "validation_error" }
+```
 
-` To nav between home and payment page btn is not provided so you have to manually add the url `
+**Missing Authorization**
 
-- /payment/ -> ` To go in the payment page`
-- /admin/ - > `To visit admin page `
+```json
+{ "detail": "Authentication credentials were not provided.", "status_code": 401 }
+```
 
-#
+---
 
-#### Example Project 
-- #### [Basic_payment_project_example](https://github.com/Shishir-Kc/schoolpaymentsys/)
+## 📂 Example Project
+
+* 🔗 [Basic Payment Project Example](https://github.com/Shishir-Kc/schoolpaymentsys/)
+
+---
+
+✨ With this README, your Khalti integration guide is **structured, professional, and easy to navigate**.
